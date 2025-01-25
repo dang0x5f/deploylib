@@ -1,5 +1,3 @@
-/* #include <stdio.h> */
-/* #include <stdlib.h> */
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -8,12 +6,13 @@
 
 static int makelink(lua_State* L)
 {
-    if(symlink(lua_tostring(L,-1), "crtlibsym") == -1){
+    if(symlink(lua_tostring(L,-2), lua_tostring(L,-1)) == -1){
+        lua_pushinteger(L,-1);
         lua_pushstring(L,strerror(errno));
-        return(1);
+        return(2);
     }
     
-    lua_pushstring(L,"done");
+    lua_pushinteger(L,0);
 
     return(1);
 }
