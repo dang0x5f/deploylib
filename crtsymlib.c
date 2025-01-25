@@ -1,17 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
+#include <errno.h>
+#include <unistd.h>
 #include "lua.h"
 #include "lauxlib.h"
 
-int link(lua_State* L)
+static int lnk(lua_State* L)
 {
-    printf("hello world");
+    /* printf("hello world"); */
+
+    /* int */
+    symlink(lua_tostring(L,-1), "crtlibsym");
 
     return(1);
 }
 
 static const struct luaL_Reg lib [] = {
-     { "link", link }
+     { "lnk", lnk }
     ,{ NULL  , NULL }
 };
 
