@@ -1,23 +1,26 @@
 /* #include <stdio.h> */
 /* #include <stdlib.h> */
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include "lua.h"
 #include "lauxlib.h"
 
-static int lnk(lua_State* L)
+static int makelink(lua_State* L)
 {
-    /* printf("hello world"); */
-
-    /* int */
-    symlink(lua_tostring(L,-1), "crtlibsym");
+    if(symlink(lua_tostring(L,-1), "crtlibsym") == -1){
+        lua_pushstring(L,strerror(errno));
+        return(1);
+    }
+    
+    lua_pushstring(L,"done");
 
     return(1);
 }
 
 static const struct luaL_Reg lib [] = {
-     { "lnk", lnk }
-    ,{ NULL  , NULL }
+     { "makelink", makelink }
+    ,{ NULL      , NULL     }
 };
 
 int 

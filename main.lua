@@ -1,3 +1,3 @@
 local crtsymlib = require "crtsymlib"
 
-crtsymlib.lnk("./crtsymlib.c")
+crtsymlib.makelink("./crtsymlib.c")
