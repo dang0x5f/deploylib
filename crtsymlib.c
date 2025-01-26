@@ -1,10 +1,11 @@
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "lua.h"
 #include "lauxlib.h"
 
-static int makelink(lua_State* L)
+static int make_link(lua_State* L)
 {
     if(symlink(lua_tostring(L,-2), lua_tostring(L,-1)) == -1){
         lua_pushinteger(L,-1);
@@ -17,9 +18,45 @@ static int makelink(lua_State* L)
     return(1);
 }
 
+static int split_on_comma(lua_State* L)
+{
+    int x, i;
+    int comma     = 1;
+    int len       = lua_tointeger(L,-1) + 1;    
+    char* buffer  = malloc(len * sizeof(char)); 
+    char* field   = malloc(len * sizeof(char)); 
+
+    sprintf(buffer,"%s", lua_tostring(L,-2));
+    /* printf("%d - %s\n", len,buffer); */
+
+    i = 0;
+    char* iter = buffer;
+    while(*iter != '\0'){
+        if(*iter == ','){
+            *(field+i) = '\0';
+            lua_pushstring(L,field);
+            i = 0;
+        } else {
+            *(field+i) = *iter;
+            i++;
+        }
+
+        iter++;
+    }
+    *(field+i) = '\0';
+    lua_pushstring(L,field);
+
+    
+    free(field);
+    free(buffer);
+    
+    return(3);
+}
+
 static const struct luaL_Reg lib [] = {
-     { "makelink", makelink }
-    ,{ NULL      , NULL     }
+     { "make_link"      , make_link      }
+    ,{ "split_on_comma" , split_on_comma }
+    ,{ NULL             , NULL           }
 };
 
 int 
