@@ -5,7 +5,8 @@
 #include "lua.h"
 #include "lauxlib.h"
 
-static int make_link(lua_State* L)
+static int 
+make_link(lua_State* L)
 {
     if(symlink(lua_tostring(L,-2), lua_tostring(L,-1)) == -1){
         lua_pushinteger(L,-1);
@@ -18,7 +19,8 @@ static int make_link(lua_State* L)
     return(1);
 }
 
-static int split_on_comma(lua_State* L)
+static int 
+split_comma(lua_State* L)
 {
     int x, i;
     int comma     = 1;
@@ -27,7 +29,6 @@ static int split_on_comma(lua_State* L)
     char* field   = malloc(len * sizeof(char)); 
 
     sprintf(buffer,"%s", lua_tostring(L,-2));
-    /* printf("%d - %s\n", len,buffer); */
 
     i = 0;
     char* iter = buffer;
@@ -45,7 +46,6 @@ static int split_on_comma(lua_State* L)
     }
     *(field+i) = '\0';
     lua_pushstring(L,field);
-
     
     free(field);
     free(buffer);
@@ -54,9 +54,9 @@ static int split_on_comma(lua_State* L)
 }
 
 static const struct luaL_Reg lib [] = {
-     { "make_link"      , make_link      }
-    ,{ "split_on_comma" , split_on_comma }
-    ,{ NULL             , NULL           }
+     { "make_link"   , make_link   }
+    ,{ "split_comma" , split_comma }
+    ,{ NULL          , NULL        }
 };
 
 int 

@@ -1,8 +1,45 @@
 #!/usr/local/bin/lua54 
 
-local crtsymlib = require "crtsymlib"
+local deploy = require "crtsymlib"
 
-home = os.getenv("HOME")
+local home_path = os.getenv("HOME")
+local src_path  = nil
+
+local file = io.open(arg[1],"r")
+if file then
+    for line in io.lines(arg[1]) do
+        c = string.sub(line,1,1)
+
+        if c == "*" then
+            src_path = line:sub(2)
+        elseif src_path == nil then
+            goto exit
+        elseif c == "#" then
+            goto continue
+        else
+            src, dst, ext = deploy.split_comma(line,line:len())
+            if ext == "null" then
+                dst_path = home_path .. dst
+            else
+                dst_path = home_path .. ext .. dst
+            end
+            dot_path = src_path .. src
+
+            -- print(dot_path .. " <- " .. dst_path)
+            status, errno = deploy.make_link(dot_path,dst_path)
+            if status == -1 then
+                print("[ERR] " .. dst_path .. " : " .. errno)
+            else
+                print("[OK] " .. dst_path .. " -> " .. dot_path)
+            end
+        end
+
+        ::continue::
+    end
+    file:close()
+end
+
+::exit::
 
 -- repeat
 --     print(" * Symbolic Link -> " .. 
@@ -14,50 +51,4 @@ home = os.getenv("HOME")
 --       input == "n"
 
 -- print(input)
-
-file = io.open(arg[1],"r")
-if file then
-    for line in io.lines(arg[1]) do
-        c = string.sub(line,1,1)
-
-        if c == "*" then
-            print(line:sub(2))
-        elseif c == "#" then
-            print("comment")
-        else
-            print("gtg")
-        end
-
-
-        -- src, dst, path = crtsymlib.split_on_comma(line,string.len(line));
-
-        -- print(src)
-        -- if path == "null" then
-        --     print(home .. dst)
-        -- else
-        --     print(home .. path .. dst)
-        -- end
-    end
-    file:close()
-end
-
--- status, errno = crtsymlib.makelink("./crtsymlib.c","symlink")
-
--- if status == -1 then
---     print(status)
---     print(errno)
--- else
---     print(status)
---     print(errno)
--- end
-
--- status, errno = crtsymlib.makelink("./crtsymlib.c","csl")
-
--- if status == -1 then
---     print(status)
---     print(errno)
--- else
---     print(status)
---     print(errno)
--- end
 
