@@ -1,20 +1,20 @@
 # deploy lib
 
-created for dot file management lua script. lua does not have build-in symbolic link function.
+Created for dot file management Lua script. Lua does not have build-in symbolic link function.
 
-- make_link(src_file , link_file)
-  - returns: status , errno
+- **make_link**(~~src_file~~ , ~~link_file~~)
+  - returns -> ~~status~~ , ~~errno~~
 
-- split_comma(line)
-  - returns: field1 , field2 , field3
+- **split_comma**(~~line~~)
+  - returns -> ~~field1~~ , ~~field2~~ , ~~field3~~
 
-> ## install
+## install
 
 ```sh
 $ ./build.sh
 ```
 
-> ## require
+## require
 
 ```lua
 local deploy = require "deploylib"
