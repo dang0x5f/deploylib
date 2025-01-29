@@ -6,34 +6,9 @@ local src_path    = nil
 local dot_path    = nil
 local file        = nil
 
-function main()
-    ans = preview()
-    if ans == "n" then
-        goto exit
-    end
-
-    file = io.open(arg[1],"r")
-
-    if file then
-        for line in io.lines(arg[1]) do
-
-            c = string.sub(line,1,1)
-
-            if c == "*" then
-                src_path = line:sub(2)
-            elseif src_path == nil then
-                goto exit
-            elseif c == "#" then
-                goto continue
-            else
-                createlink(line)
-            end
-
-            ::continue::
-        end
-        file:close()
-    end
-    ::exit::
+function usage()
+    print("[ERR] requires 1 argument")
+    print("usage: deploy.lua MANIFEST")
 end
 
 function preview()
@@ -87,6 +62,41 @@ function buildpaths(line)
         dst_path = home_path .. ext .. dst
     end
     dot_path = src_path .. src
+end
+
+function main()
+    if #arg < 1 then
+        usage()
+        goto exit
+    end
+
+    ans = preview()
+    if ans == "n" then
+        goto exit
+    end
+
+    file = io.open(arg[1],"r")
+
+    if file then
+        for line in io.lines(arg[1]) do
+
+            c = string.sub(line,1,1)
+
+            if c == "*" then
+                src_path = line:sub(2)
+            elseif src_path == nil then
+                goto exit
+            elseif c == "#" then
+                goto continue
+            else
+                createlink(line)
+            end
+
+            ::continue::
+        end
+        file:close()
+    end
+    ::exit::
 end
 
 main()
