@@ -60,7 +60,7 @@ static const struct luaL_Reg lib [] = {
 };
 
 int 
-luaopen_crtsymlib(lua_State* L)
+luaopen_deploylib(lua_State* L)
 {
     luaL_newlib(L,lib);
     return(1);

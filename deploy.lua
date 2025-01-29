@@ -1,6 +1,6 @@
 #!/usr/local/bin/lua54 
 
-local deploy      = require "crtsymlib"
+local deploy      = require "deploylib"
 local home_path   = os.getenv("HOME")
 local src_path    = nil
 local dot_path    = nil
