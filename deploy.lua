@@ -1,14 +1,21 @@
 #!/usr/local/bin/lua54 
 
-local deploy      = require "deploylib"
-local home_path   = os.getenv("HOME")
+package.cpath = package.cpath..";/home/dang/lib/?.so"
+
+local home_path  = os.getenv("HOME")
+local lib_name   = "deploylib"
+local lib_path   = home_path.."/lib/"..lib_name
+
+-- local deploy = require(lib_name)
+local lib_status, deploy = pcall(require,lib_name)
+
 local src_path    = nil
 local dot_path    = nil
 local file        = nil
 
 function usage()
     print("[ERR] requires 1 argument")
-    print("usage: deploy.lua MANIFEST")
+    print("usage:\n  deploy.lua MANIFEST")
 end
 
 function preview()
@@ -70,6 +77,18 @@ function main()
         goto exit
     end
 
+    print("[DEPENDENCY] "..lib_path)
+
+    if not lib_status then
+        print("[ERR] Dependency NOT loaded: "..lib_path)
+        usage()
+        goto exit
+    end
+
+    -- TODO: delete
+    print("Dependency loaded")
+
+--[[
     ans = preview()
     if ans == "n" then
         goto exit
@@ -96,6 +115,7 @@ function main()
         end
         file:close()
     end
+--]]
     ::exit::
 end
 
