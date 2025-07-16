@@ -1,8 +1,11 @@
-# deploy lib
+# symlink make/remove lib
 
 Created for dot file management Lua script. Lua does not have build-in symbolic link function.
 
-- **make_link**(*src_file* , *link_file*)
+- **mk_link**(*src_file* , *link_file*)
+  - returns -> *status* , *errno*
+
+- **rm_link**(*link_file*)
   - returns -> *status* , *errno*
 
 - **split_comma**(*line*)
@@ -17,5 +20,6 @@ $ ./build.sh
 ## require
 
 ```lua
-local deploy = require "deploylib"
+package.cpath = package.cpath..";/home/dang/lib/?.so"
+local dotlink = pcall(require, lib_name)
 ```
