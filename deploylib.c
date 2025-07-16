@@ -6,9 +6,23 @@
 #include "lauxlib.h"
 
 static int 
-make_link(lua_State* L)
+mk_link(lua_State* L)
 {
     if(symlink(lua_tostring(L,-2), lua_tostring(L,-1)) == -1){
+        lua_pushinteger(L,-1);
+        lua_pushstring(L,strerror(errno));
+        return(2);
+    }
+    
+    lua_pushinteger(L,0);
+
+    return(1);
+}
+
+static int 
+rm_link(lua_State* L)
+{
+    if(unlink(lua_tostring(L,-1)) == -1){
         lua_pushinteger(L,-1);
         lua_pushstring(L,strerror(errno));
         return(2);
@@ -54,7 +68,8 @@ split_comma(lua_State* L)
 }
 
 static const struct luaL_Reg lib [] = {
-     { "make_link"   , make_link   }
+     { "mk_link"     , mk_link     }
+    ,{ "rm_link"     , rm_link     }
     ,{ "split_comma" , split_comma }
     ,{ NULL          , NULL        }
 };
